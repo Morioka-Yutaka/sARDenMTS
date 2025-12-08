@@ -828,4 +828,95 @@ outputs:
 
 </details>
 
+## `%ars_init()` macro <a name="arsinit-macro-14"></a> ######
+
+### Purpose    : 
+               Initialize the ARS metadata environment.  
+               This macro assigns the ARS library, defines internal  
+               utility macros for validation and error handling, and  
+               creates empty ARS metadata tables if they do not exist.  
+###  Usage      : 
+              　Call once at the start of a session or inside any ARS  
+               authoring macro to guarantee required tables exist.  
+
+### Parameters :  
+~~~text
+    lib=      LIBREF for ARS metadata tables.  
+              Default: ars.  
+    libpath=  Physical path for the ARS library.  
+              The directory is created if it does not exist.  
+~~~
+
+###  Tables Created if Missing :  
+~~~text
+    study        Study-level metadata.  
+    output       Output/display definitions.  
+    dataset      Input/analysis dataset references.  
+    variable     Display variable roles and derivations.  
+    statistic    Displayed statistics and formatting.  
+    layout       Layout/sectioning rules.  
+    meta_kv      Free key–value metadata.  
+    model        Analysis model specifications.  
+    estimand     Estimand definitions per analysis.  
+    contrast     Contrast definitions per analysis.  
+    multiplicity Multiplicity adjustment definitions.  
+    analysis     Bridge linking outputs to analyses and core analysis info.  
+    group        Grouping level definitions (ordering/labels).  
+~~~
+
+###  Usage Example :  
+~~~sas
+    Set a permanent ARS library and initialize all metadata tables.  
+      %ars_init(  
+        lib=ars,  
+        libpath=F:\project\metadata\ars  
+      );  
+~~~
+###  Notes      :  
+    This macro is idempotent. Repeated calls re-assign the library  
+    and only create tables that are absent.
+
+  
+---
+ 
+## `%ars_write_yaml()` macro <a name="arswriteyaml-macro-15"></a> ######
+
+Purpose    : Export ARS metadata tables into a hierarchical ARM-TS YAML file.  
+               The macro gathers unique analyses and outputs, builds the  
+               analysis–output relationship list, and emits YAML using  
+               yaml_writer utilities.  
+
+  Usage      : Run after populating ars.* metadata tables (study, analysis,  
+               estimand, model, contrast, multiplicity, group, output,  
+               dataset, variable, statistic, meta_kv).  
+
+  Parameters :  
+    lib=      ARS library containing normalized metadata tables  
+              (default: ars).  
+    outpath=  Output folder for the YAML file (required).  
+    outfile=  Output YAML file name without extension (required).  
+
+  Required Supporting Package (Macros) :  
+  [yaml_writer]
+  https://github.com/PharmaForest/yaml_writer
+    %yaml_start(outpath=, file=)  
+    %yaml_end()  
+    %dataset_export(ds=, wh=, cat=, varlist=, indent=, keyvar=)  
+
+  Output     : Creates &outpath./&outfile..yaml and intermediate WORK tables.  
+
+  Notes      :  
+    - analyses are emitted as a YAML sequence under "analyses".  
+    - outputs are emitted as a YAML sequence under "outputs".  
+    - analysis_refs per output are derived from ars.analysis.  
+
+  Usage Example :  
+    %ars_write_yaml(  
+      lib=ars,  
+      outpath=F:\project\metadata,  
+      outfile=armts_metadata  
+    );
+
+  
+---
 
