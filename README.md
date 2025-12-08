@@ -905,7 +905,8 @@ outputs:
     %yaml_end()  
     %dataset_export(ds=, wh=, cat=, varlist=, indent=, keyvar=)  
 
-#### Output     : Creates &outpath./&outfile..yaml and intermediate WORK tables.  
+#### Output     : 
+                Creates &outpath./&outfile..yaml and intermediate WORK tables.  
 
  #### Notes      :  
     - analyses are emitted as a YAML sequence under "analyses".  
@@ -958,7 +959,6 @@ outputs:
 ---
 
 ## `%ars_add_dataset()` macro <a name="arsadddataset-macro-3"></a> ######
-
 #### Purpose    : 
                Register dataset usage for an output into ars.dataset.  
                Supports multiple rows per call via pipe-delimited inputs.  
@@ -996,7 +996,6 @@ outputs:
 ---
 
 ## `%ars_add_variable()` macro <a name="arsaddvariable-macro-13"></a> ######
-
 #### Purpose    :
                 Register display variables for an output into ars.variable.  
                Supports multiple rows per call via pipe-delimited inputs.  
@@ -1071,3 +1070,381 @@ outputs:
 ~~~
   
 ---
+
+## `%ars_add_layout()` macro <a name="arsaddlayout-macro-6"></a> ######
+#### Purpose    :
+                Register layout/section rules for an output  
+                into ars.layout. Supports multiple rows per call.  
+
+####  Usage      : 
+                 Call once per output to define header/body sections,  
+                 ordering, and split variables.  
+
+####  Parameters : 
+~~~sas
+    lib=        ARS library (default: ars).  
+    output_id=  Output identifier (required).  
+    sections=   Section names, '|' delimited (required).  
+    row_orders= Row ordering per section, '|' delimited (required).  
+    col_orders= Optional column ordering, '|' delimited.  
+    headers=    Optional header expressions per section, '|' delimited.  
+    split_vars= Optional split variable list per section, '|' delimited.  
+~~~
+
+####  Output     : 
+                  Adds one row per section to &lib..layout.  
+
+####  Notes      :
+                  sections= and row_orders= counts must match.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_layout(  
+      output_id=T14_1_1,  
+      sections=header|body_continuous,  
+      row_orders=1|10,  
+      headers=Treatment by Sex|Continuous variables,  
+      split_vars=TRTA SEX|  
+    );
+~~~
+  
+---
+
+## `%ars_add_meta()` macro <a name="arsaddmeta-macro-7"></a> ######
+#### Purpose    : 
+               Add arbitrary key–value metadata for an output  
+               into ars.meta_kv. Supports multiple rows per call.  
+
+####  Usage      : 
+                Use for free-form metadata not captured elsewhere.  
+
+####  Parameters :  
+~~~sas
+    lib=        ARS library (default: ars).  
+    output_id=  Output identifier (required).  
+    keys=       Metadata keys, '|' delimited (required).  
+    values=     Metadata values, '|' delimited (required).  
+~~~
+
+####  Output     : 
+                 Adds one row per key to &lib..meta_kv.  
+
+####  Notes      : 
+                 keys= and values= counts must match.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_meta(  
+      output_id=T14_1_1,  
+      keys=analysis_method|missing_display,  
+      values=Descriptive only|Display missing as 'NA'  
+    );
+~~~
+  
+---
+
+## `%ars_add_model()` macro <a name="arsaddmodel-macro-8"></a> ######
+#### Purpose    : 
+                Register model specifications for an analysis  
+                into ars.model. Supports multiple rows per call.  
+####  Usage     :
+                Call once per analysis_id to define one or more models.  
+                For descriptive analyses, use model_type=DESCRIPTIVE.  
+
+####  Parameters :  
+~~~sas
+    lib=                ARS library (default: ars).  
+    analysis_id=        Analysis identifier (required).  
+    model_ids=          Model IDs, '|' delimited (required).  
+    model_types=        Model types, '|' delimited (required).  
+    responses=          Response variables, '|' delimited (optional).  
+    links=              Link functions, '|' delimited (optional).  
+    dists=              Distributions, '|' delimited (optional).  
+    fixed_effects_list= Fixed effects, '|' delimited (optional).  
+    covariates_list=    Covariates, '|' delimited (optional).  
+    random_effects_list=Random effects, '|' delimited (optional).  
+    repeated_list=      Repeated measures specs, '|' delimited (optional).  
+    cov_structures=     Covariance structures, '|' delimited (optional).  
+    methods=            Estimation methods, '|' delimited (optional).  
+~~~
+
+####  Output     : 
+                 Adds one row per model to &lib..model.  
+
+####  Notes      : 
+                 model_ids= and model_types= counts must match.  
+
+####  Usage Example :
+~~~sas
+    %ars_add_model(  
+      analysis_id=A0,  
+      model_ids=M0,  
+      model_types=DESCRIPTIVE,  
+      methods=No inferential model  
+    );
+~~~
+  
+---
+
+## `%ars_add_estimand()` macro <a name="arsaddestimand-macro-4"></a> ######
+#### Purpose    : 
+                Register estimand definitions for an analysis  
+                into ars.estimand. Supports multiple rows per call.  
+
+####  Usage     : 
+                Call once per analysis_id to define one or more estimands.  
+
+####  Parameters :  
+~~~sas
+    lib=              ARS library (default: ars).  
+    analysis_id=      Analysis identifier (required).  
+    estimand_ids=     Estimand IDs, '|' delimited (required).  
+    populations=      Populations per estimand, '|' delimited (required).  
+    variables=        Target variables/endpoints, '|' delimited (required).  
+    intercurrents=    Intercurrent event strategies, '|' delimited (optional).  
+    summary_measures= Summary measures, '|' delimited (required).  
+    analysis_methods= Analysis methods per estimand, '|' delimited (optional).  
+~~~
+
+####  Output     : 
+                  Adds one row per estimand to &lib..estimand.  
+
+####  Notes      :
+                  Required lists must be the same length.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_estimand(  
+      analysis_id=A0,  
+      estimand_ids=E0,  
+      populations=ITT,  
+      variables=Baseline demographics,  
+      summary_measures=Descriptive summaries  
+    );
+~~~
+  
+---
+
+## `%ars_add_contrast()` macro <a name="arsaddcontrast-macro-2"></a> ######
+#### Purpose    :
+               Register contrast definitions for an analysis  
+               into ars.contrast. Supports multiple rows per call.  
+
+####  Usage      : 
+                 Call once per analysis_id to define one or more contrasts.  
+
+####  Parameters :  
+~~~sas
+    lib=            ARS library (default: ars).  
+    analysis_id=    Analysis identifier (required).  
+    contrast_ids=   Contrast IDs, '|' delimited (required).  
+    types=          Contrast types per contrast, '|' delimited (required).  
+    numerators=     Numerator groups, '|' delimited (optional).  
+    denominators=   Denominator groups, '|' delimited (optional).  
+    contrast_exprs= Contrast expressions, '|' delimited (optional).  
+    labels=         Contrast labels, '|' delimited (optional).  
+~~~
+
+####  Output     : 
+                  Adds one row per contrast to &lib..contrast.  
+
+####  Notes      :
+                  contrast_ids= and types= counts must match.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_contrast(  
+      analysis_id=A0,  
+      contrast_ids=C0,  
+      types=NONE,  
+      labels=No treatment comparison  
+    );
+~~~
+  
+---
+
+## `%ars_add_multiplicity()` macro <a name="arsaddmultiplicity-macro-9"></a> ######
+#### Purpose    :
+                 Register multiplicity adjustment definitions for an analysis  
+                 into ars.multiplicity. Supports multiple rows per call.  
+
+####  Usage      :
+                 Call once per analysis_id to define multiplicity families.  
+
+####  Parameters :  
+~~~sas
+    lib=              ARS library (default: ars).  
+    analysis_id=      Analysis identifier (required).  
+    family_ids=       Family IDs, '|' delimited (required).  
+    endpoint_ids=     Endpoint IDs per family, '|' delimited (required).  
+    methods=          Adjustment methods per family, '|' delimited (required).  
+    alphas=           Alpha levels per family, '|' delimited (optional).  
+    orders=           Testing order per family, '|' delimited (optional).  
+    condition_exprs=  Gatekeeping/condition expressions, '|' delimited (required).  
+    notes_list=       Notes per family, '|' delimited (required).  
+~~~
+
+####  Output     : 
+                 Adds one row per family to &lib..multiplicity.  
+
+####  Notes      : 
+                 All lists must be the same length.  
+
+####  Usage Example : 
+~~~sas
+    %ars_add_multiplicity(  
+      analysis_id=A0,  
+      family_ids=F0,  
+      endpoint_ids=BASELINE,  
+      methods=NONE,  
+      alphas=.,  
+      orders=.,  
+      condition_exprs=,  
+      notes_list=Not applicable  
+    );
+~~~
+  
+---
+
+## `%ars_add_group()` macro <a name="arsaddgroup-macro-5"></a> ######
+#### Purpose    :
+                Register grouping levels for an analysis into ars.group.  
+               Supports multiple rows per call via pipe-delimited inputs.  
+
+####  Usage      : 
+                Call once per analysis_id to define group levels/order/filter.  
+
+####  Parameters :  
+~~~sas
+    lib=          ARS library (default: ars).  
+    analysis_id=  Analysis identifier (required; scalar).  
+    var_names=    Grouping variable names, '|' delimited (required).  
+    level_values= Level values per row, '|' delimited (required).  
+    level_labels= Level labels per row, '|' delimited (required).  
+    level_orders= Level display order per row, '|' delimited (required).  
+    level_filters=Optional row-level filters, '|' delimited.  
+~~~
+
+####  Output     :
+                 Adds one row per level to &lib..group.  
+
+####  Notes      :
+                 All pipe-delimited lists must be the same length.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_group(  
+      analysis_id=A0,  
+      var_names=TRTA|TRTA,  
+      level_values=DRUG|PBO,  
+      level_labels=Drug|Placebo,  
+      level_orders=1|2  
+    );
+~~~
+  
+---
+
+## `%ars_add_layout()` macro <a name="arsaddlayout-macro-6"></a> ######
+#### Purpose    :
+                Register layout/section rules for an output  
+               into ars.layout. Supports multiple rows per call.  
+
+####  Usage      :
+                 Call once per output to define header/body sections,  
+                 ordering, and split variables.  
+
+####  Parameters :  
+~~~sas
+    lib=        ARS library (default: ars).  
+    output_id=  Output identifier (required).  
+    sections=   Section names, '|' delimited (required).  
+    row_orders= Row ordering per section, '|' delimited (required).  
+    col_orders= Optional column ordering, '|' delimited.  
+    headers=    Optional header expressions per section, '|' delimited.  
+    split_vars= Optional split variable list per section, '|' delimited.  
+~~~
+
+####  Output     :
+                  Adds one row per section to &lib..layout.  
+
+####  Notes      :
+                sections= and row_orders= counts must match.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_layout(  
+      output_id=T14_1_1,  
+      sections=header|body_continuous,  
+      row_orders=1|10,  
+      headers=Treatment by Sex|Continuous variables,  
+      split_vars=TRTA SEX|  
+    );
+~~~
+  
+---
+
+## Notes on versions history
+
+- 0.1.0(09December2025): Initial version.
+
+---
+
+## What is SAS Packages?
+
+The package is built on top of **SAS Packages Framework(SPF)** developed by Bartosz Jablonski.
+
+For more information about the framework, see [SAS Packages Framework](https://github.com/yabwon/SAS_PACKAGES).
+
+You can also find more SAS Packages (SASPacs) in the [SAS Packages Archive(SASPAC)](https://github.com/SASPAC).
+
+## How to use SAS Packages? (quick start)
+
+### 1. Set-up SAS Packages Framework
+
+First, create a directory for your packages and assign a `packages` fileref to it.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+filename packages "\path\to\your\packages";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Secondly, enable the SAS Packages Framework.
+(If you don't have SAS Packages Framework installed, follow the instruction in 
+[SPF documentation](https://github.com/yabwon/SAS_PACKAGES/tree/main/SPF/Documentation) 
+to install SAS Packages Framework.)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+%include packages(SPFinit.sas)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+### 2. Install SAS package
+
+Install SAS package you want to use with the SPF's `%installPackage()` macro.
+
+- For packages located in **SAS Packages Archive(SASPAC)** run:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+  %installPackage(packageName)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- For packages located in **PharmaForest** run:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+  %installPackage(packageName, mirror=PharmaForest)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- For packages located at some network location run:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+  %installPackage(packageName, sourcePath=https://some/internet/location/for/packages)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  (e.g. `%installPackage(ABC, sourcePath=https://github.com/SomeRepo/ABC/raw/main/)`)
+
+
+### 3. Load SAS package
+
+Load SAS package you want to use with the SPF's `%loadPackage()` macro.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sas
+%loadPackage(packageName)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+### Enjoy!
