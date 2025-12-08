@@ -434,7 +434,8 @@ If that package is not installed, %ars_write_yaml() will not work.
   outpath=&arspath,
   outfile=armts_example_3tables
 );
+```
 
-</details>```
+</details>
 
 
