@@ -10,4 +10,4 @@ Designed to integrate seamlessly with sARDen (ARD builder), with the longer-term
 > [!WARNING]
 > This package uses the yaml_writer package to output ARS data in YAML format, so it is listed as a dependency.
 If that package is not installed, %ars_write_yaml() will not work.
-> [https://github.com/Morioka-Yutaka/yaml_writer](https://github.com/PharmaForest/yaml_writer)
+> [yaml_writer](https://github.com/PharmaForest/yaml_writer)
