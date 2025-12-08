@@ -828,8 +828,7 @@ outputs:
 
 </details>
 
-### `%ars_init()` macro <a name="arsinit-macro-14"></a> ######
-
+## `%ars_init()` macro <a name="arsinit-macro-14"></a> ######
 #### Purpose    : 
                Initialize the ARS metadata environment.  
                This macro assigns the ARS library, defines internal  
@@ -879,8 +878,7 @@ outputs:
   
 ---
  
-### `%ars_write_yaml()` macro <a name="arswriteyaml-macro-15"></a> ######
-
+## `%ars_write_yaml()` macro <a name="arswriteyaml-macro-15"></a> ######
 #### Purpose    : 
                Export ARS metadata tables into a hierarchical ARM-TS YAML file.  
                The macro gathers unique analyses and outputs, builds the  
@@ -924,4 +922,37 @@ outputs:
 ~~~
   
 ---
+## `%ars_add_study()` macro <a name="arsaddstudy-macro-12"></a> ######
+#### Purpose    : 
+               Register study-level metadata into ars.study.  
+               Appends one observation describing the study.  
 
+####  Usage      :
+                Call once per study to seed ARM-TS study section.  
+
+####  Parameters :  
+~~~sas
+    lib=         ARS library (default: ars).  
+    study_id=    Study identifier (required).  
+    protocol_id= Protocol identifier (required).  
+    title=       Study title (required).  
+    version=     Metadata version label (required).  
+    created_by=  Author/creator name (optional).  
+    created_on=  Creation date (default: today in YYYY-MM-DD).  
+~~~
+
+#### Output     : Adds one row to &lib..study.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_study(  
+      lib=ars,  
+      study_id=STUDY001,  
+      protocol_id=ABC-123,  
+      title=%nrstr(A Randomized, Double-blind Study of XYZ in Hypertension),  
+      version=v1.0,  
+      created_by=Yutaka Morioka  
+    );
+~~~
+  
+---
