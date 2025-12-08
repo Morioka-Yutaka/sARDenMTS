@@ -438,7 +438,11 @@ If that package is not installed, %ars_write_yaml() will not work.
 
 </details>
 
-~~~yaml
+
+<details>
+<summary>YAML file.</summary>
+
+```yaml
 study:
   study_id: STUDY001
   protocol_id: ABC-123
@@ -819,6 +823,8 @@ outputs:
     meta:
       analysis_method: Subject incidence; any occurrence counts once
       counting_rule: Count subjects, not events
-~~~
+```
+
+</details>
 
 
