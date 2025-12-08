@@ -13,9 +13,6 @@ If that package is not installed, %ars_write_yaml() will not work.
 > [yaml_writer](https://github.com/PharmaForest/yaml_writer)
 
 
-<details>
-
-<summary>Tips for collapsed sections</summary>
 ~~~yaml
 study:
   study_id: STUDY001
@@ -398,4 +395,3 @@ outputs:
       analysis_method: Subject incidence; any occurrence counts once
       counting_rule: Count subjects, not events
 ~~~
-</details>
