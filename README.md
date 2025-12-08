@@ -438,9 +438,10 @@ If that package is not installed, %ars_write_yaml() will not work.
 
 </details>
 
+<img width="504" height="254" alt="image" src="https://github.com/user-attachments/assets/b52a94da-c392-4c57-922c-e4f72bb6407f" />
 
 <details>
-<summary>YAML file.</summary>
+<summary>Generated YAML file</summary>
 
 ```yaml
 study:
