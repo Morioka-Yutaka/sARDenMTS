@@ -854,12 +854,12 @@ outputs:
     variable     Display variable roles and derivations.  
     statistic    Displayed statistics and formatting.  
     layout       Layout/sectioning rules.  
-    meta_kv      Free key–value metadata.  
+    meta_kv      Free key–value metadata.
+    analysis     Bridge linking outputs to analyses and core analysis info.  
     model        Analysis model specifications.  
     estimand     Estimand definitions per analysis.  
     contrast     Contrast definitions per analysis.  
     multiplicity Multiplicity adjustment definitions.  
-    analysis     Bridge linking outputs to analyses and core analysis info.  
     group        Grouping level definitions (ordering/labels).  
 ~~~
 
@@ -952,6 +952,121 @@ outputs:
       title=%nrstr(A Randomized, Double-blind Study of XYZ in Hypertension),  
       version=v1.0,  
       created_by=Yutaka Morioka  
+    );
+~~~
+  
+---
+
+## `%ars_add_dataset()` macro <a name="arsadddataset-macro-3"></a> ######
+
+#### Purpose    : 
+               Register dataset usage for an output into ars.dataset.  
+               Supports multiple rows per call via pipe-delimited inputs.  
+
+####  Usage      : 
+                Call once per output to define all contributing domains.  
+
+####  Parameters :  
+~~~sas
+    lib=        ARS library (default: ars).  
+    output_id=  Output identifier to link datasets (required).  
+    domains=    List of dataset/domain names, '|' delimited (required).  
+    roles=      List of roles per domain, '|' delimited (required).  
+               Allowed: analysis|input|ref.  
+    filters=    Optional list of WHERE/filter expressions per domain,  
+               '|' delimited. If provided, count must match domains=.  
+~~~
+
+####  Output     : 
+                 Adds one row per domain to &lib..dataset.  
+
+####  Notes      : 
+                 domains= and roles= counts must match; filters= optional.  
+
+####  Usage Example : 
+~~~sas
+    %ars_add_dataset(  
+      output_id=T14_1_1,  
+      domains=ADSL|ADVS|ADLB,  
+      roles=analysis|input|input,  
+      filters=%nrbquote(SAFFL='Y'|PARAMCD='SYSBP'|PARAMCD='GLUC')  
+    );
+~~~
+  
+---
+
+## `%ars_add_variable()` macro <a name="arsaddvariable-macro-13"></a> ######
+
+#### Purpose    :
+                Register display variables for an output into ars.variable.  
+               Supports multiple rows per call via pipe-delimited inputs.  
+
+####  Usage      :
+                Call once per output to define BY/ROW/COL/STAT variables.  
+
+####  Parameters :  
+~~~sas
+    lib=         ARS library (default: ars).  
+    output_id=   Output identifier to link variables (required).  
+    vars=        Variable names, '|' delimited (required).  
+    labels=      Variable labels, '|' delimited (required).  
+    types=       num|char per variable, '|' delimited (required).  
+    roles=       by|row|col|stat per variable, '|' delimited (required).  
+    formats=     Optional SAS formats per variable, '|' delimited.  
+    derivations= Optional derivation text per variable, '|' delimited.  
+~~~
+
+####  Output     : 
+                 Adds one row per variable to &lib..variable.  
+
+####  Notes      : 
+                 Counts across vars/labels/types/roles must match.  
+
+####  Usage Example :  
+~~~sas
+    %ars_add_variable(  
+      output_id=T14_1_1,  
+      vars=TRTA|SEX|AGE,  
+      labels=Treatment|Sex|Age (years),  
+      types=char|char|num,  
+      roles=by|by|row,  
+      formats=$trt.|$sex.|8.1  
+    );
+~~~
+  
+---
+
+## `%ars_add_statistic()` macro <a name="arsaddstatistic-macro-11"></a> ######
+
+#### Purpose    :
+                Register statistics to be displayed for an output  
+                into ars.statistic. Supports multiple rows per call.  
+####  Usage      : 
+                 Call once per output to define all required stats.  
+####  Parameters :  
+~~~sas
+    lib=          ARS library (default: ars).  
+    output_id=    Output identifier (required).  
+    stats=        Statistic names, '|' delimited (required).  
+    labels=       Display labels, '|' delimited (required).  
+    methods=      Computation methods, '|' delimited (required).  
+    orders=       Display order, '|' delimited (required).  
+    decimals=     Decimal places, '|' delimited (required).  
+    footnote_ids= Optional footnote IDs per statistic, '|' delimited.
+~~~
+####  Output     : 
+                 Adds one row per statistic to &lib..statistic.  
+####  Notes      : 
+                  All provided lists must be the same length.  
+####  Usage Example :  
+~~~sas
+    %ars_add_statistic(  
+      output_id=T14_1_1,  
+      stats=N|MEAN|SD,  
+      labels=n|Mean|SD,  
+      methods=COUNT|MEAN|STD,  
+      orders=1|2|3,  
+      decimals=0|1|1  
     );
 ~~~
   
