@@ -15,7 +15,7 @@ If that package is not installed, %ars_write_yaml() will not work.
 ## Over View
 
 <details>
-<summary>Tips for collapsed sections</summary>
+<summary>An example of exporting ARS definitions to a folder as SAS datasets and simultaneously outputting them as a YAML file.</summary>
 
 ```sas
 /*----------------------------------------------------------
