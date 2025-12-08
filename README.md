@@ -8,4 +8,7 @@ Designed to integrate seamlessly with sARDen (ARD builder), with the longer-term
 <img width="360" height="360" alt="sARDenMTS_small" src="https://github.com/user-attachments/assets/64c6b904-20aa-41d3-9780-f0afd219e187" />
 
 > [!WARNING]
-> ここは重要な注意点です
+> This package uses the yaml_writer package to output ARS data in YAML format, so it is listed as a dependency.
+If that package is not installed, %ars_write_yaml() will not work.
+
+https://github.com/Morioka-Yutaka/yaml_writer
