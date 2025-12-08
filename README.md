@@ -16,6 +16,7 @@ If that package is not installed, %ars_write_yaml() will not work.
 
 <details>
 <summary>Tips for collapsed sections</summary>
+  ```sas
 /*----------------------------------------------------------
   1) Initialize ARS library
 ----------------------------------------------------------*/
@@ -433,6 +434,7 @@ If that package is not installed, %ars_write_yaml() will not work.
   outfile=armts_example_3tables
 );
 </details>
+```
 
 ~~~yaml
 study:
