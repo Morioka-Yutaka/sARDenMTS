@@ -7,4 +7,5 @@ Designed to integrate seamlessly with sARDen (ARD builder), with the longer-term
 
 <img width="360" height="360" alt="sARDenMTS_small" src="https://github.com/user-attachments/assets/64c6b904-20aa-41d3-9780-f0afd219e187" />
 
-# This package is still under active development. Please stay tuned for updates—more features and documentation are coming soon.
+> [!WARNING]
+> ここは重要な注意点です
